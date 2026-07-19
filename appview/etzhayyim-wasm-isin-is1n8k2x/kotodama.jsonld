@@ -1,0 +1,80 @@
+{
+  "@context": "https://etzhayyim.com/ns/kotodama/v1",
+  "@id": "did:web:isin.etzhayyim.com",
+  "convoSystemPrompt": "You are ISIN Securities Registry agent. Global securities identification platform with SEC EDGAR filings and OpenFIGI lookup. Data model: isin, ticker, company_name, exchange, country, sector, cik, filing_type, source_url, source_did, collected_at. Respond helpfully in the users language.",
+  "duties": [
+    "勤労の義務"
+  ],
+  "entities": [
+    {
+      "category": "regulatory",
+      "did": "did:web:isin.etzhayyim.com:source:sec",
+      "name": "SEC EDGAR",
+      "sourceId": "src-sec",
+      "url": "https://www.sec.gov/files/company_tickers.json"
+    },
+    {
+      "category": "identifier",
+      "did": "did:web:isin.etzhayyim.com:source:openfigi",
+      "name": "OpenFIGI",
+      "sourceId": "src-openfigi",
+      "url": "https://api.openfigi.com/v3/mapping"
+    }
+  ],
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "ISO-6166"
+    ],
+    "raci": "responsible"
+  },
+  "kpi": [
+    "credits の獲得"
+  ],
+  "name": "ISIN Securities Registry",
+  "nanoid": "is1n8k2x",
+  "performerType": "service",
+  "profile": {
+    "avatar": "ISIN",
+    "capabilities": [
+      "securities-identification",
+      "isin-lookup"
+    ],
+    "category": "financial",
+    "description": "Global securities identification and corporate data platform — ISIN (ISO 6166) primary key, SEC EDGAR filings, OpenFIGI lookup, 60 country DIDs, cross-linked to ISIC/GICS/Exchange/LEI.",
+    "displayName": "ISIN Securities Registry"
+  },
+  "runtimeType": "worker",
+  "triggers": {
+    "http": {
+      "listen": "0.0.0.0:8080",
+      "routes": [
+        "/api/...",
+        "/health",
+        "/.well-known/did.json",
+        "/.well-known/atproto-did",
+        "/..."
+      ],
+      "spa": true,
+      "staticDir": "/wasm/svelte/dist"
+    },
+    "subscribeRepos": {
+      "collections": [
+        "app.bsky.feed.post",
+        "app.bsky.feed.like",
+        "app.bsky.feed.repost",
+        "app.bsky.graph.follow",
+        "com.etzhayyim.isin.security",
+        "com.etzhayyim.isin.collectionJob",
+        "com.etzhayyim.isin.filing",
+        "com.etzhayyim.isin.source"
+      ]
+    }
+  },
+  "ui": {
+    "accent": "#1e40af",
+    "icon": "ISIN"
+  },
+  "uiType": "appview",
+  "version": "1.0.0"
+}

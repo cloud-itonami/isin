@@ -1,0 +1,11 @@
+{
+  "name": "etzhayyim-wasm-isin-is1n8k2x",
+  "version": "1.0.0",
+  "description": "isin.etzhayyim.com — ISIN (ISO 6166) global securities registry. SEC EDGAR + OpenFIGI. 60 country DIDs.",
+  "main": "src/app.ts",
+  "type": "module",
+  "dependencies": {
+    "@etzhayyim/kotodama-host-sdk": "workspace:*",
+    "@etzhayyim/xrpc": "workspace:*"
+  }
+}

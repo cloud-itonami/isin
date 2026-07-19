@@ -1,0 +1,45 @@
+{
+  "name": "kotodama-is1n8k2x",
+  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2025-03-17",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "nodejs_als"
+  ],
+  "assets": {
+    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  "vars": {
+    "APP_CAPABILITIES": "[\"securities-identification\",\"isin-lookup\"]",
+    "APP_DEPLOY_AT": "2026-04-12T00:06:09Z",
+    "APP_DEPLOY_SHA": "fe1d932beb0",
+    "APP_DESCRIPTION": "Global securities identification and corporate data platform — ISIN (ISO 6166) primary key, SEC EDGAR filings, OpenFIGI lookup, 60 country DIDs, cross-linked to ISIC/GICS/Exchange/LEI.",
+    "APP_DISPLAY_NAME": "ISIN Securities Registry",
+    "APP_EMBED_URL": "https://is1n8k2x.etzhayyim.com/?embed=1",
+    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_NANOID": "is1n8k2x",
+    "APP_PERFORMER_TYPE": "service",
+    "APP_SOURCE": "",
+    "APP_TEMPLATE": "",
+    "APP_UI_TYPE": "appview",
+    "APP_VERSION": "1.0.0",
+    "AGENTGATEWAY_MCP_ROUTER_URL": "https://mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message"
+  },
+  "rules": [
+    {
+      "type": "CompiledWasm",
+      "globs": [
+        "**/*.wasm"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "is1n8k2x.etzhayyim.com/*",
+      "zone_name": "etzhayyim.com"
+    }
+  ]
+}
