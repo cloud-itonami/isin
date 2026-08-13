@@ -16,11 +16,12 @@
 ```bash
 git clone https://github.com/cloud-itonami/isin.git
 cd isin
-git log --oneline -1
-# dbe911b chore: extract isin app from root
+git log --oneline
 ```
 
-履歴は 1 commit しかない（抽出時の 1 本）。
+履歴は短い。**根が `dbe911b chore: extract isin app from root` の 1 本**で、
+その時点の tree が抽出物そのもの（`migration.edn` の `:tree 46ea1dd7`）。
+以降の commit はここに足された文書だけである。
 
 west 管理下の checkout を使う場合、この repo の remote 名は `origin` ではなく
 **`cloud-itonami`**（org 名）である。`git fetch origin` は
