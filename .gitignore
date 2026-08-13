@@ -1,0 +1,5 @@
+# `npm install` が kotoba/ に作る。docs/operator-quickstart.md §2-3 を参照。
+node_modules/
+
+# package-lock.json は意図的に無視していない —— この repo に lockfile を
+# commit するかどうかが未決定なので、git status に出したままにしてある。
