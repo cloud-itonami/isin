@@ -39,7 +39,11 @@ kotoba/          11 コマンドの純粋関数（Worker ではない）。vites
   test/isin.test.ts
 xrpc-adapter/    CF Worker。11 ルートを kotoba に委譲する単一ファイル
   wrangler.jsonc   route: isin.etzhayyim.com/xrpc/*
-appview/         kotodama.jsonld + SvelteKit の骨組み
+appview/         kotodama.jsonld + cljs（shadow-cljs + reagent + re-frame + jp-go-dds）appview
+  wrangler.jsonc   route: is1n8k2x.etzhayyim.com/* — assets-only（main は無し）
+  cljs/            単一ページの status ビュー（`isin.app`）。ビルド出力は cljs/public/js
+  src/             backend TypeScript（`app.ts` / 移設済み `xrpc-mcp-router-proxy.ts`）。
+                   どちらも Worker には未配線 — 詳細は wrangler.jsonc 冒頭のコメント
 README.edn       機械可読の repo メタデータ（etzhayyim.repository/v1）
 migration.edn    etzhayyim/root からの抽出元 revision / tree
 ```
