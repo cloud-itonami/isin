@@ -1,13 +1,48 @@
 {
+  // NOTE: this app used to be built by SvelteKit's @sveltejs/adapter-cloudflare,
+  // which emitted both a server-rendering Worker script (`main`, the deployed
+  // XRPC handler at svelte/src/routes/xrpc/[...path]/+server.ts) and a static
+  // client bundle (`assets.directory`, the +page.svelte status page). The
+  // frontend was migrated to a plain ClojureScript (shadow-cljs + reagent +
+  // re-frame + jp-go-dds) static bundle with no server-rendering step — see
+  // cljs/ and the repo README. `main` is dropped (a Cloudflare Worker can be
+  // assets-only) and `assets.directory` now points at the cljs build output.
+  //
+  // `main` is NOT repointed at either Worker source still in this repo's
+  // `src/` dir, even though one of them *does* call `env.ASSETS.fetch()`
+  // (unlike the identical-scaffold twin `cloud-itonami-isic-5222`, where
+  // neither did):
+  //   - `src/xrpc-mcp-router-proxy.ts` (moved verbatim from the SvelteKit
+  //     server route) imports '@sveltejs/kit' and won't run at all now that
+  //     the SvelteKit toolchain is gone.
+  //   - `src/app.ts` DOES fall back to `env.ASSETS.fetch(req)` for
+  //     unmatched paths, so repointing `main` at it would not break static
+  //     serving on its own. It was already unreferenced before this
+  //     migration too (the pre-migration `main` pointed at the SvelteKit
+  //     build output, never at this file). It was left un-repointed because
+  //     activating it changes production behavior beyond a frontend swap:
+  //     it proxies `com.etzhayyim.isin.*` XRPC calls to `env.DISPATCHER_URL`
+  //     (default `https://dispatcher.etzhayyim.com`) using
+  //     `env.DISPATCHER_INTERNAL_SECRET`, and this `wrangler.jsonc` declares
+  //     neither binding — so its behavior under this Worker's actual config
+  //     is unverified. Whether to wire it in (with those bindings added) is
+  //     an open product decision, not something this frontend migration
+  //     decides.
+  //
+  // This edit is unverified: `wrangler deploy`/`wrangler dev` were not run
+  // against it. Dropping `main` means neither Worker source above is in the
+  // deploy path — the XRPC BFF this app served through the SvelteKit route
+  // (`src/xrpc-mcp-router-proxy.ts`, see that file's header) is no longer
+  // reachable, same as before this migration `src/app.ts`'s dispatcher
+  // proxy was not reachable either. See the repo README for what that means.
   "name": "kotodama-is1n8k2x",
-  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
   "compatibility_date": "2025-03-17",
   "compatibility_flags": [
     "nodejs_compat",
     "nodejs_als"
   ],
   "assets": {
-    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "directory": "./cljs/public",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
@@ -19,7 +54,7 @@
     "APP_DESCRIPTION": "Global securities identification and corporate data platform — ISIN (ISO 6166) primary key, SEC EDGAR filings, OpenFIGI lookup, 60 country DIDs, cross-linked to ISIC/GICS/Exchange/LEI.",
     "APP_DISPLAY_NAME": "ISIN Securities Registry",
     "APP_EMBED_URL": "https://is1n8k2x.etzhayyim.com/?embed=1",
-    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_FRAMEWORK": "cljs-reagent-re-frame-jp-go-dds",
     "APP_NANOID": "is1n8k2x",
     "APP_PERFORMER_TYPE": "service",
     "APP_SOURCE": "",

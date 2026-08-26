@@ -1,0 +1,153 @@
+(ns isin.app
+  "cloud-itonami/isin (etzhayyim-project-isin) appview Worker
+  (`etzhayyim-wasm-isin-is1n8k2x`) — reagent + re-frame, view built from
+  jp-go-dds (デジタル庁デザインシステム) hiccup.
+
+  Faithful port of the previous SvelteKit scaffold's status page
+  (`appview/etzhayyim-wasm-isin-is1n8k2x/svelte/src/routes/+page.svelte`,
+  84 lines): a static display of this Worker's own declared surface —
+  title / project / kind, route count + list, wrangler var keys, an XRPC
+  flag, and its own source path. Every field below mirrors the constant
+  `app` object `+page.svelte` held in its <script> block, with three kinds
+  of deliberate change (nothing here is invented beyond these, and nothing
+  is simplified away):
+
+  - `:app/relative-path` now names this file, not the deleted Svelte one.
+  - `:app/route-count` and `:app/routes`, and `:app/vars`, are NOT copied
+    from the Svelte constant, which held `routeCount: 0`, `routes: []` and
+    `vars: []` — stale relative to `wrangler.jsonc`, which already
+    declared one route (`is1n8k2x.etzhayyim.com/*`) and 14 vars
+    (`APP_CAPABILITIES`, `APP_DEPLOY_AT`, `APP_DEPLOY_SHA`,
+    `APP_DESCRIPTION`, `APP_DISPLAY_NAME`, `APP_EMBED_URL`,
+    `APP_FRAMEWORK`, `APP_NANOID`, `APP_PERFORMER_TYPE`, `APP_SOURCE`,
+    `APP_TEMPLATE`, `APP_UI_TYPE`, `APP_VERSION`,
+    `AGENTGATEWAY_MCP_ROUTER_URL`). This namespace reports what
+    `wrangler.jsonc` actually declares instead of repeating the page's
+    pre-existing drift.
+  - `:app/xrpc?` is now false, changed from the Svelte constant's `true`.
+    This migration's `wrangler.jsonc` drops `main` (see that file's header
+    comment and the repo README): the Worker becomes assets-only, so
+    neither Worker source in this repo's `src/` dir is wired into the
+    deploy path any more. The former SvelteKit XRPC handler is preserved
+    byte-for-byte at `src/xrpc-mcp-router-proxy.ts` (moved, not deleted,
+    from `svelte/src/routes/xrpc/[...path]/+server.ts`) but not wired —
+    same as `src/app.ts`'s own, differently-shaped XRPC-to-dispatcher
+    path, which was *already* unreferenced before this migration (the
+    pre-migration `main` pointed at the SvelteKit build output, never at
+    `src/app.ts`). Backend Worker/XRPC code is out of scope for a
+    frontend migration.
+
+  `public/index.html`'s inlined <style> was produced once, at authoring
+  time, by `jp-go-dds.page/->page` running on the JVM (via this deps.edn's
+  jp-go-dds git/sha), concatenating the vendored `dds.css` with
+  `jp-go-dds.core/ext-css` — exactly what `jp-go-dds.page/page` composes
+  for its own <style> block. This namespace only requires
+  `jp-go-dds.core` — the browser bundle does not need `jp-go-dds.page` or
+  `html.core` at runtime; those are JVM-only tools used to author the
+  static shell once. Regenerate that shell (e.g. if jp-go-dds's core
+  components or ext-rules change) with:
+
+    (require '[jp-go-dds.page :as page] '[clojure.java.io :as io])
+    (spit \"public/index.html\"
+          (page/->page {:title \"etzhayyim-project-isin\"
+                         :lang \"ja\"
+                         :description \"Ai etzhayyim Isin appview (reagent + re-frame + jp-go-dds).\"
+                         :css (slurp (io/resource \"jp_go_dds/dds.css\"))}
+                        [:div {:id \"app\"} \"etzhayyim-project-isin loading…\"]
+                        [:script {:src \"js/app.js\"}]))
+
+  (then add back the `<noscript>etzhayyim-project-isin requires
+  JavaScript.</noscript>` line the regen recipe above does not emit, same
+  as open-ports's shell)."
+  (:require [reagent.dom :as rdom]
+            [re-frame.core :as rf]
+            [jp-go-dds.core :as dds]))
+
+;; -- db ------------------------------------------------------------------
+;;
+;; Same eight facts + own source path that `+page.svelte`'s `app` const
+;; held (title/project/name/kind/routeCount/routes/vars/xrpc/relativePath),
+;; with routeCount/routes/vars corrected to what wrangler.jsonc actually
+;; declares, and xrpc corrected to false (see namespace docstring).
+
+(def default-db
+  {:app/title "Isin Is1n8k2x"
+   :app/project "etzhayyim-project-isin"
+   :app/name "etzhayyim-wasm-isin-is1n8k2x"
+   :app/kind "appview"
+   :app/route-count 1
+   :app/routes ["is1n8k2x.etzhayyim.com/*"]
+   :app/vars ["APP_CAPABILITIES" "APP_DEPLOY_AT" "APP_DEPLOY_SHA" "APP_DESCRIPTION"
+              "APP_DISPLAY_NAME" "APP_EMBED_URL" "APP_FRAMEWORK" "APP_NANOID"
+              "APP_PERFORMER_TYPE" "APP_SOURCE" "APP_TEMPLATE" "APP_UI_TYPE"
+              "APP_VERSION" "AGENTGATEWAY_MCP_ROUTER_URL"]
+   :app/xrpc? false
+   :app/relative-path "appview/etzhayyim-wasm-isin-is1n8k2x/cljs/src/isin/app.cljs"})
+
+(rf/reg-event-db
+ :initialize-db
+ (fn [_ _] default-db))
+
+(rf/reg-sub :app/title (fn [db _] (:app/title db)))
+(rf/reg-sub :app/project (fn [db _] (:app/project db)))
+(rf/reg-sub :app/name (fn [db _] (:app/name db)))
+(rf/reg-sub :app/kind (fn [db _] (:app/kind db)))
+(rf/reg-sub :app/route-count (fn [db _] (:app/route-count db)))
+(rf/reg-sub :app/routes (fn [db _] (:app/routes db)))
+(rf/reg-sub :app/vars (fn [db _] (:app/vars db)))
+(rf/reg-sub :app/xrpc? (fn [db _] (:app/xrpc? db)))
+(rf/reg-sub :app/relative-path (fn [db _] (:app/relative-path db)))
+
+;; -- view ------------------------------------------------------------------
+
+(defn app-view []
+  (let [title         @(rf/subscribe [:app/title])
+        name          @(rf/subscribe [:app/name])
+        kind          @(rf/subscribe [:app/kind])
+        project       @(rf/subscribe [:app/project])
+        route-count   @(rf/subscribe [:app/route-count])
+        routes        @(rf/subscribe [:app/routes])
+        vars          @(rf/subscribe [:app/vars])
+        xrpc?         @(rf/subscribe [:app/xrpc?])
+        relative-path @(rf/subscribe [:app/relative-path])]
+    (dds/container
+
+     [:section {:class "dds-ext-section"}
+      [:p {:class "dds-ext-lead"} (str "Cloudflare " kind)]
+      (dds/heading 1 title)
+      [:span {:class "dads-u-mono-16N-150"} name]]
+
+     [:section {:class "dds-ext-section"}
+      (dds/grid {:min "12rem"}
+        (dds/card [:p {:class "dds-ext-lead"} "Project"] [:strong project])
+        (dds/card [:p {:class "dds-ext-lead"} "Routes"] [:strong (str route-count)])
+        (dds/card [:p {:class "dds-ext-lead"} "XRPC"]
+                  [:strong (if xrpc? "enabled" "not configured")]))]
+
+     [:section {:class "dds-ext-section"}
+      (dds/heading 2 "Public Routes" {:size "24"})
+      (if (seq routes)
+        (dds/card
+         (into [:ul {:class "dds-ext-stack"}]
+               (map (fn [r] [:li {:class "dads-u-mono-16N-150"} r]) routes)))
+        [:p {:class "dds-ext-lead"} "No public route is declared next to this app surface."])]
+
+     [:section {:class "dds-ext-section"}
+      (dds/heading 2 "Runtime Bindings" {:size "24"})
+      (if (seq vars)
+        (into [:div {:class "dds-ext-row"}]
+              (map (fn [v] (dds/chip-label v {:color "blue"})) vars))
+        [:p {:class "dds-ext-lead"} "No public vars are declared in the nearest wrangler config."])]
+
+     [:section {:class "dds-ext-section"}
+      (dds/heading 2 "Source" {:size "24"})
+      [:p {:class "dads-u-mono-16N-150"} relative-path]])))
+
+;; -- mount -------------------------------------------------------------------
+
+(defn render []
+  (rdom/render [app-view] (.getElementById js/document "app")))
+
+(defn ^:export main []
+  (rf/dispatch-sync [:initialize-db])
+  (render))
