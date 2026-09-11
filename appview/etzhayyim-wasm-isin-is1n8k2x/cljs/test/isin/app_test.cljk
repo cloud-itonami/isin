@@ -25,7 +25,7 @@
             "APP_VERSION" "AGENTGATEWAY_MCP_ROUTER_URL"]
            @(rf/subscribe [:app/vars])))
     (is (false? @(rf/subscribe [:app/xrpc?])))
-    (is (= "appview/etzhayyim-wasm-isin-is1n8k2x/cljs/src/isin/app.cljs"
+    (is (= "appview/etzhayyim-wasm-isin-is1n8k2x/cljs/src/isin/app.cljk"
            @(rf/subscribe [:app/relative-path])))))
 
 (deftest routes-sub-reflects-db
