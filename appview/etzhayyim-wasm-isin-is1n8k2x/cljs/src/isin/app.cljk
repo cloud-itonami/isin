@@ -82,7 +82,7 @@
               "APP_PERFORMER_TYPE" "APP_SOURCE" "APP_TEMPLATE" "APP_UI_TYPE"
               "APP_VERSION" "AGENTGATEWAY_MCP_ROUTER_URL"]
    :app/xrpc? false
-   :app/relative-path "appview/etzhayyim-wasm-isin-is1n8k2x/cljs/src/isin/app.cljs"})
+   :app/relative-path "appview/etzhayyim-wasm-isin-is1n8k2x/cljs/src/isin/app.cljk"})
 
 (rf/reg-event-db
  :initialize-db
