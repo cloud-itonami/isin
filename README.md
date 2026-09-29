@@ -5,7 +5,7 @@ etzhayyim substrate（AT Protocol PDS）へ**書き込む**経路である。** 
 コマンドを純粋な TypeScript 関数として持つ `kotoba/` と、それを Cloudflare Worker
 の XRPC エンドポイントとして露出する `xrpc-adapter/` の 2 パッケージからなる。
 
-名前が機能を示さないので冒頭で名乗る（CLAUDE.md「名前が機能を示さない repo を
+名前が機能を示さないので冒頭で名乗る（AGENTS.md「名前が機能を示さない repo を
 作ったら、README の冒頭で名乗る」）。`isin` という bare 名は識別子の規格名だけを
 言っており、「何をする repo か」——**その識別子で索く登録簿への書き込み経路である**
 こと——は名前から読めない。
@@ -20,7 +20,7 @@ enrich 済みのフィールドを渡してくる**前提で永続化だけを�
 | repo | 何を所有するか |
 |---|---|
 | **`cloud-itonami/isin`**（ここ） | **証券の識別と永続化**。ISIN / LEI の検査桁、`e.write()` / `e.read()` を呼ぶ 11 コマンド、その XRPC Worker adapter |
-| `cloud-itonami/isic` | **産業分類**（UN ISIC Rev.4 の 4 階層）。CLAUDE.md が `:CLASSIFIED_AS` で結ぶと書いている相手 |
+| `cloud-itonami/isic` | **産業分類**（UN ISIC Rev.4 の 4 階層）。AGENTS.md が `:CLASSIFIED_AS` で結ぶと書いている相手 |
 | `cloud-itonami/cloud-itonami-lei-*`（185 repo） | **個社の法人アーカイブ**。LEI 1 件 = 1 repo |
 | `com-junkawasaki/org-gleif-projections` | **LEI の正本投影**（GLEIF Golden Copy） |
 
@@ -66,7 +66,7 @@ PDS XRPC 経由で書く）の設計理由は `kotoba/README.md` にある。
 | `xrpc-adapter/` の `npm install` | **通らない**。`workspace:*` を解決する workspace root がこの repo に無い（`EUNSUPPORTEDPROTOCOL`）。root に npm workspaces を足しても直らない（`workspace:` は npm の語彙ではない） |
 | `appview/` | **依存が repo 内に無い**（`@etzhayyim/kotodama-host-sdk` / `@etzhayyim/xrpc` を `workspace:*` で参照） |
 | `isin.etzhayyim.com` | **NXDOMAIN**。zone `etzhayyim.com` は在るがこのサブドメインは無く、Worker route は未有効 = **未デプロイ** |
-| 外部データ取得 | **実装されていない**（`kotoba/src` に `fetch(` 0 件）。設計どおりで欠陥ではないが、CLAUDE.md と `kotodama.jsonld` はこの repo が EDGAR / OpenFIGI を引くかのように書いている |
+| 外部データ取得 | **実装されていない**（`kotoba/src` に `fetch(` 0 件）。設計どおりで欠陥ではないが、AGENTS.md と `kotodama.jsonld` はこの repo が EDGAR / OpenFIGI を引くかのように書いている |
 | git 依存 2 本の URL | `github.com/etzhayyim/com-etzhayyim-sdk{,-mock}` は**別 org へ移動済み**（実体は `kotoba-lang/sdk{,-mock}`）。GitHub のリダイレクト経由でのみ解決する |
 
 **したがって、この repo で今日できるのは「テストを走らせること」だけである。**
@@ -74,7 +74,7 @@ adapter のビルドも Worker の deploy もできない。何が塞いでい�
 「詰まっている 3 点」に、それをどう扱うかは
 [`docs/adr/0001-verified-state-and-blockers.md`](docs/adr/0001-verified-state-and-blockers.md) にある。
 
-> ⚠ **`CLAUDE.md` は、この repo に無い実装を記述している。** 60 か国の country DID、
+> ⚠ **`AGENTS.md` は、この repo に無い実装を記述している。** 60 か国の country DID、
 > heartbeat による social evolution、`kotodama.ATPost` / `G("Security").Match(...)` と
 > いった Go の W Protocol API、18 Minerva competencies —— **どれも `kotoba/` にも
 > `xrpc-adapter/` にも対応物が無い**（`kotoba/src` に country registry は無く、

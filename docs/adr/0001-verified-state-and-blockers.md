@@ -25,7 +25,7 @@
    **root に npm workspaces を足しても直らない**（`workspace:` は npm の語彙で
    はない）。
 3. `isin.etzhayyim.com` は NXDOMAIN。Worker route は一度も有効化されていない。
-4. 継承した文書 3 つが、この実装と食い違っている（`CLAUDE.md` は Go / W Protocol の
+4. 継承した文書 3 つが、この実装と食い違っている（`AGENTS.md` は Go / W Protocol の
    別実装、`kotoba/README.md` は自分と矛盾、`xrpc-adapter/README.md` は
    モノレポのパス）。
 
@@ -58,12 +58,12 @@
 
 ### D3. 継承した文書は消さず、入口を 1 本にして誤読を止める
 
-`CLAUDE.md` は Go / `kotodama.ATPost` / SQL graph / 60 country DID / 18 Minerva
+`AGENTS.md` は Go / `kotodama.ATPost` / SQL graph / 60 country DID / 18 Minerva
 competencies を記述しており、**この repo（TypeScript / PDS XRPC）に対応物が無い**。
 `grep -rn "ATPost\|Minerva\|country_code" kotoba/src/ xrpc-adapter/src/` は無出力。
 
 これを**消さない**。抽出元では正しい文書であり、設計意図の記録として価値がある。
-代わりに `README.md` を唯一の入口とし、そこで「CLAUDE.md はこの実装の説明では
+代わりに `README.md` を唯一の入口とし、そこで「AGENTS.md はこの実装の説明では
 ない」と名指しする。同じ扱いを次の 2 つにも適用する:
 
 - `kotoba/README.md` — 冒頭「11 of 11 (100%)」と末尾表「8 of 11」が矛盾（実測 11）。
@@ -83,7 +83,7 @@ competencies を記述しており、**この repo（TypeScript / PDS XRPC）に
 ## Consequences
 
 - この repo の入口は `README.md` 1 本になる。サブパッケージの README と
-  `CLAUDE.md` は、矛盾を明示した上で出自の記録として残る。
+  `AGENTS.md` は、矛盾を明示した上で出自の記録として残る。
 - ブロッカーは 3 つとも開いたまま。**deploy できないことは既知であり、
   「試したら動くかもしれない」ではない。**
 - `migration.edn` の `:allowed-additions` は `README.edn` / `migration.edn` の
