@@ -287,7 +287,7 @@ export は全部で 19 個）。
 | `kotoba/README.md` | Option B（PDS XRPC 書き込み）を採った理由、ISIN / LEI 検査桁の算法 |
 | `docs/adr/0001-verified-state-and-blockers.md` | 上のブロッカーをどう扱うか |
 
-**`CLAUDE.md` をこの実装の説明として読まない。** 60 か国の country DID、heartbeat、
+**`AGENTS.md` をこの実装の説明として読まない。** 60 か国の country DID、heartbeat、
 `kotodama.ATPost(...)`、`G("Security").Match(...)`、18 Minerva competencies ——
 どれも Go の別実装の設計であって、ここ（TypeScript / PDS XRPC）に対応物が無い:
 
